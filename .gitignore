@@ -1,0 +1,19 @@
+# Matlab extensions to ignore
+*.asv
+*.mat
+*.fig
+
+# Other extensions useful to ignore
+*.csv
+*.zip
+*.pdf
+*.eps
+
+# Mex code compilation
+*.mexa64
+*.mexw64
+*.mexglx
+*.mexa32
+*.mexw32
+*.dll
+
