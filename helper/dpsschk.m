@@ -22,11 +22,20 @@ function [tapers,eigs]=dpsschk(tapers,N,Fs)
 % Outputs: 
 % tapers        (calculated or precalculated tapers)
 % eigs          (eigenvalues) 
-if nargin < 3; error('Need all arguments'); end
-sz=size(tapers);
-if sz(1)==1 && sz(2)==2;
-    [tapers,eigs]=dpss(N,tapers(1),tapers(2));
-    tapers = tapers*sqrt(Fs);
-elseif N~=sz(1);
-    error('seems to be an error in your dpss calculation; the number of time points is different from the length of the tapers');
+
+% check user input
+if nargin < 3
+    error('Need all arguments'); 
+    
+end
+
+sz = size( tapers );
+if sz( 1 ) == 1 && sz( 2 ) == 2;
+    [ tapers, eigs ] = dpss( N, tapers( 1 ), tapers( 2 ) );
+    tapers = tapers * sqrt( Fs );
+    
+elseif N ~= sz( 1 );
+    error(...
+        'seems to be an error in your dpss calculation; the number of time points is different from the length of the tapers');
+    
 end;
