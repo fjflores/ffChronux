@@ -82,10 +82,10 @@ if nargout > 7 && err(1)==0;
     error('Errors computed only if err(1) is not equal to zero');
 end;
 
-[N,Ch]=check_consistency(data1,data2);
+[ N, Ch ] = check_consistency( data1, data2 );
 
-N=length(t); % number of points in grid for dpss
-nfft=max(2^(nextpow2(N)+pad),N); % number of points in fft of prolates
+N = length( t ); % number of points in grid for dpss
+nfft = max( 2^( nextpow2( N ) + pad ), N ); % number of points in fft of prolates
 [f,findx]=getfgrid(Fs,nfft,fpass); 
 tapers=dpsschk(tapers,N,Fs); % check tapers
 [J1,Msp1,Nsp1]=mtfftpt(data1,tapers,nfft,t,f,findx);

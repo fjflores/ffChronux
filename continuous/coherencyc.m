@@ -103,7 +103,7 @@ phi = angle( C12 );
 if nargout >= 9; 
      [ confC, phistd, Cerr ] = coherr( C, J1, J2, err, trialave );
      
-elseif nargout == 8;
+elseif nargout >= 7;
      [ confC, phistd ] = coherr( C, J1, J2, err, trialave );
      
 end;

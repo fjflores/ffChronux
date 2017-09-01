@@ -1,4 +1,4 @@
-function [C,phi,S12,S1,S2,f,zerosp,confC,phistd,Cerr]=coherencycpt(data1,data2,params,fscorr,t)
+function [C,phi,S12,S1,S2,f,zerosp,confC,phistd,Cerr,J1,J2]=coherencycpt(data1,data2,params,fscorr,t)
 % Multi-taper coherency,cross-spectrum and individual spectra -continuous data and point process as times
 %
 % Usage:
@@ -93,12 +93,18 @@ zerosp(Nsp2==0)=1; % set zerosp to 1 for trials where no spikes were found
 S12=squeeze(mean(conj(J1).*J2,2)); % cross spectrum
 S1=squeeze(mean(conj(J1).*J1,2)); % spectrum data 1
 S2=squeeze(mean(conj(J2).*J2,2)); % spectrum data 2
-if trialave; S12=squeeze(mean(S12,2)); S1=squeeze(mean(S1,2)); S2=squeeze(mean(S2,2)); end;
+
+if trialave; 
+    S12=squeeze(mean(S12,2)); 
+    S1=squeeze(mean(S1,2)); 
+    S2=squeeze(mean(S2,2)); 
+end;
+
 C12=S12./sqrt(S1.*S2);
 C=abs(C12);
 phi=angle(C12);
-if nargout==10; 
-  if fscorr==1; 
+if nargout >= 10; 
+  if fscorr == 1; 
      [confC,phistd,Cerr]=coherr(C,J1,J2,err,trialave,[],Nsp2); 
   else
      [confC,phistd,Cerr]=coherr(C,J1,J2,err,trialave); 
