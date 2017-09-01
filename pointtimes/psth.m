@@ -169,7 +169,7 @@ if err > 0
   plot(t,R-2*E,'g')
 end
 %axis([T(1)+(4*sig) T(2)-(4*sig) 0 1.25*max(R)])
-axis([T(1)+(4*sig) T(2)-(4*sig) 0 max(R+2*E)+10])
+% axis([T(1)+(4*sig) T(2)-(4*sig) 0 max(R+2*E)+10])
 xlabel('time (s)')
 ylabel('rate (Hz)')
 title(['Trial averaged rate : Gaussian Kernel :'  ...
