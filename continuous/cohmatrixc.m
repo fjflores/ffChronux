@@ -50,28 +50,56 @@ function [C,phi,S12,f,confC,phistd,Cerr]=cohmatrixc(data,params)
 %                bands for phi - only for err(1)>=1 
 %       Cerr  (Jackknife error bars for C - use only for Jackknife - err(1)=2)
 
-if nargin < 1; error('need data'); end;
-if nargin < 2; params=[]; end;
-[N,Ch]=size(data);
-if Ch==1; error('Need at least two channels of data'); end;
-[tapers,pad,Fs,fpass,err,trialave,params]=getparams(params);
+if nargin < 1
+    error( 'need data' ); 
+end
+
+if nargin < 2
+    params=[ ]; 
+end
+
+[ N, Ch ] = size( data );
+
+if Ch == 1
+    error('Need at least two channels of data'); 
+    
+end
+
+[...
+    tapers,...
+    pad,...
+    Fs,...
+    fpass,...
+    err,...
+    trialave,...
+    params ] = getparams( params );
+
 clear trialave params
-if nargout > 6 && err(1)~=2; 
-    error('Cerr computed only for Jackknife. Correct inputs and run again');
-end;
-if nargout >= 4 && err(1)==0;
+if nargout > 4 && err( 1 ) ~= 2 
+    error(...
+        'Cerr computed only for Jackknife. Correct inputs and run again' );
+    
+end
+
+if nargout >= 5 && err( 1 ) == 0
 %   Errors computed only if err(1) is nonzero. Need to change params and run again.
-    error('When errors are desired, err(1) has to be non-zero.');
-end;
-nfft=max(2^(nextpow2(N)+pad),N);
-[f,findx]=getfgrid(Fs,nfft,fpass); 
-tapers=dpsschk(tapers,N,Fs); % check tapers
-J=mtfftc(data,tapers,nfft,Fs);
-J=J(findx,:,:); 
-if err(1)==0;
-     [C,phi,S12]=cohmathelper(J,err);
-elseif err(1)==1;
-     [C,phi,S12,confC,phistd]=cohmathelper(J,err);
-elseif err(1)==2;
-     [C,phi,S12,confC,phistd,Cerr]=cohmathelper(J,err);
+    error('When errors are desired, err(1) has to be non-zero.')
+    
+end
+
+nfft = max( 2^( nextpow2( N ) + pad ), N );
+[ f, findx ] = getfgrid( Fs, nfft, fpass ); 
+tapers = dpsschk( tapers, N, Fs ); % check tapers
+J = mtfftc( data, tapers, nfft, Fs );
+J = J( findx, :, : );
+
+if err( 1 ) == 0
+     [ C, phi, S12 ] = cohmathelper( J, err );
+     
+elseif err( 1 ) == 1
+     [ C, phi, S12, confC, phistd ] = cohmathelper( J, err );
+     
+elseif err( 1 ) == 2
+     [ C, phi, S12, confC, phistd, Cerr ] = cohmathelper( J, err );
+     
 end
