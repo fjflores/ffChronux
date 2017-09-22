@@ -46,21 +46,21 @@ function [Sc,Cmat,Ctot,Cvec,Cent,f]=CrossSpecMatc(data,win,params)
 %       f (frequencies)  
 d=ndims(data);
 if d<2, error('Need multidimensional array'); end
-if d==2, 
+if d==2
     [ N, C ]=size( data ); 
-end;
+end
 
-if d==3, 
+if d==3
     [ N, C, Ntr ] = size( data );
-end; 
+end
 
-if nargin < 3; 
+if nargin < 3
     params=[]; 
-end;
+end
 
 [ tapers, pad,Fs, fpass, err,trialave,params]=getparams(params);
 clear err trialave params
-nwin = round( win * Fs ); 
+nwin = round( win( 1 ) * Fs ); 
 nfft = max(2^(nextpow2(nwin)+pad),nwin); 
 [ f, findx ] = getfgrid(Fs,nfft,fpass); 
 tapers = dpsschk(tapers,nwin,Fs); % check tapers
