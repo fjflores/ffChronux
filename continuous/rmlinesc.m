@@ -1,4 +1,4 @@
-function data=rmlinesc(data,params,p,plt,f0)
+function data = rmlinesc( data, params, p, plt, f0 )
 % removes significant sine waves from data (continuous data).
 %
 % Usage: data=rmlinesc(data,params,p,plt,f0)
@@ -48,46 +48,76 @@ function data=rmlinesc(data,params,p,plt,f0)
 %  Outputs: 
 %       data        (data with significant lines removed)
 %
-data=change_row_to_column(data);
-[N,C]=size(data);
-if nargin < 2 || isempty(params); params=[]; end;
-[tapers,pad,Fs,fpass,err,trialave,params]=getparams(params);
-clear pad fpass err trialave
-user_specified_pval=0;
-if nargin < 3 || isempty(p);p=0.05/N; else; user_specified_pval=1; end;
-if nargin < 4 || isempty(plt); plt='n'; end;
-if nargin < 5; f0=[]; end;
-if isempty(f0) && user_specified_pval==1; p=p/N; end;
-[datafit,Amps,freqs,Fval,sig]=fitlinesc(data,params,p,'n',f0);
-datan=data-datafit;
-%params.tapers=dpsschk(tapers,N,Fs); % calculate the tapers
 
-% [Fval,A,f,sig] = ftestc(data,params,p,'n');
-% fmax=findpeaks(Fval,sig);
-% datasine=data;
-% for ch=1:C;
-%     fsig=f(fmax(ch).loc);
-%     Nf=length(fsig);
-%     fprintf('The significant lines for channel %d and the amplitudes are \n',ch);
-%     for nf=1:Nf;
-%         fprintf('%12.8f\n',fsig(nf));
-%         fprintf('%12.8f\n',real(A(fmax(ch).loc(nf),ch)));
-%         fprintf('%12.8f\n',imag(A(fmax(ch).loc(nf),ch))); 
-%         fprintf('\n');
-%     end;
-%     datasine(:,ch)=exp(i*2*pi*(0:N-1)'*fsig/Fs)*A(fmax(ch).loc,ch)+exp(-i*2*pi*(0:N-1)'*fsig/Fs)*conj(A(fmax(ch).loc,ch));
-% end;
-% % subplot(211); plot(data); hold on; plot(datasine,'r');
-% datan=data-datasine;
-% subplot(212); plot(datan);
-if nargout==0 || strcmp(plt,'y'); 
+data = change_row_to_column( data );
+[ N, C ] = size( data );
+if nargin < 2 || isempty(params)
+    params = [ ]; 
+    
+end
+
+[ tapers, pad, Fs, fpass, err, trialave, params ] = getparams( params );
+clear pad fpass err trialave
+user_specified_pval = 0;
+
+if nargin < 3 || isempty(p)
+    p = 0.05 / N;
+    
+else
+    user_specified_pval = 1;
+    
+end
+
+if nargin < 4 || isempty(plt)
+    plt='n';
+    
+end
+
+if nargin < 5
+    f0 = [ ]; 
+    
+end
+
+if isempty( f0 ) && user_specified_pval == 1;
+    p = p / N;
+    
+end
+
+[ datafit, Amps, freqs, Fval, sig ] = fitlinesc( data, params, p, 'n', f0 );
+datan = data - datafit;
+
+if nargout == 0 || strcmp( plt, 'y' ) 
    figure;
-   [S1,f]=mtspectrumc(detrend(data),params);
-   subplot(321); plot(f,10*log10(S1));xlabel('frequency Hz'); ylabel('Spectrum dB'); title('Original spectrum');
-   subplot(323); plot(f,Fval); line(get(gca,'xlim'),[sig sig],'Color','r'); xlabel('frequency Hz');ylabel('F-statistic');
-   [S2,f]=mtspectrumc(detrend(datan),params);
-   subplot(325);plot(f,10*log10(S1),f,10*log10(S2));xlabel('frequency Hz'); ylabel('Spectrum dB'); title('Original and cleaned spectra');
-   subplot(322); plot((1:size(data,1))/params.Fs,data); xlabel('time s');  title('Original data');
-   subplot(324); plot((1:size(datan,1))/params.Fs,datan);xlabel('time s'); title('Cleaned data');
-end;
-data=datan;   
+   [ S1, f ] = mtspectrumc( detrend( data ), params );
+   
+   subplot(321); 
+   plot( f, 10 * log10( S1 ) );
+   xlabel( 'frequency Hz' ); 
+   ylabel( 'Spectrum dB' );
+   title( 'Original spectrum' );
+   
+   subplot(323); 
+   plot( f, Fval );
+   line( get( gca, 'xlim' ), [ sig sig ], 'Color', 'r' );
+   xlabel( 'frequency Hz' );
+   ylabel( 'F-statistic' );
+   [ S2, f ] = mtspectrumc( detrend( datan ), params );
+   
+   subplot( 325 );
+   plot( f, 10 * log10( S1 ), f, 10 * log10( S2 ) );
+   xlabel( 'frequency Hz' );
+   ylabel( 'Spectrum dB' );
+   title( 'Original and cleaned spectra' );
+   
+   subplot(322); 
+   plot( ( 1 : size( data, 1 ) ) / params.Fs, data );
+   xlabel( 'time s' ); 
+   title('Original data');
+   
+   subplot( 324 ); 
+   plot( ( 1 : size( datan, 1 ) ) / params.Fs, datan );
+   xlabel( 'time s' ); 
+   title( 'Cleaned data' );
+   
+end
+data = datan;   
