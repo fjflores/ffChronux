@@ -1,4 +1,4 @@
-function [datafit,Amps,freqs,Fval,sig]=fitlinesc(data,params,p,plt,f0)
+function [ datafit, Amps, freqs, Fval, sig ] = fitlinesc( data, params, p, plt, f0 )
 % fits significant sine waves to data (continuous data).
 %
 % Usage: [datafit,Amps,freqs,Fval,sig]=fitlinesc(data,params,p,plt,f0)
@@ -52,23 +52,42 @@ function [datafit,Amps,freqs,Fval,sig]=fitlinesc(data,params,p,plt,f0)
 %       freqs          (significant frequencies)
 %       Fval           (Fstatistic at all frequencies)
 %       sig            (significance level for F distribution p value of p)
-data=change_row_to_column(data);
-[N,C]=size(data);
-if nargin < 2 || isempty(params); params=[]; end;
-[tapers,pad,Fs,fpass,err,trialave,params]=getparams(params); 
+
+data = change_row_to_column( data );
+[ N, C ] = size( data );
+if nargin < 2 || isempty(params)
+    params=[]
+end
+
+[ tapers, pad, Fs, fpass, err, trialave, params ] = getparams( params );
+
 clear pad fpass err trialave;
-if nargin < 3 || isempty(p);p=0.05/N;end;
-if nargin < 4 || isempty(plt); plt='n'; end;
-if nargin < 5; f0=[]; end;
-params.tapers=dpsschk(tapers,N,Fs); % calculate the tapers
-[Fval,A,f,sig] = ftestc(data,params,p,plt);
-if isempty(f0);
-   fmax=findpeaks(Fval,sig);
-   freqs=cell(1,C);
-   Amps=cell(1,C);
-   datafit=data;
-   for ch=1:C;
-       fsig=f(fmax(ch).loc);
+
+if nargin < 3 || isempty( p )
+    p = 0.05 / N;
+    
+end
+
+if nargin < 4 || isempty( plt )
+    plt = 'n';
+    
+end
+
+if nargin < 5
+    f0 = [ ]; 
+    
+end
+
+params.tapers = dpsschk( tapers, N, Fs ); % calculate the tapers
+[ Fval, A, f, sig ] = ftestc( data, params, p, plt );
+
+if isempty(f0)
+   fmax = chrfindpeaks( Fval, sig );
+   freqs = cell( 1, C );
+   Amps = cell( 1, C );
+   datafit = data;
+   for ch = 1 : C;
+       fsig = f( fmax(ch).loc );
        freqs{ch}=fsig;
        Amps{ch}=A(fmax(ch).loc,ch);
        Nf=length(fsig);
@@ -83,19 +102,24 @@ if isempty(f0);
    end;
 else
    indx = zeros( length(f0) );
-   for n=1:length(f0);
-       [fsig,indx(n)]=min(abs(f-f0(n)));
-   end;
-   fsig=f(indx);
-   for ch=1:C;
-       freqs{ch}=fsig;
-       Amps{ch}=A(indx,ch);
-       Nf=length(fsig);
+   
+   for n = 1 : length( f0 );
+       [ fsig, indx( n ) ] = min( abs( f - f0( n ) ) );
+       
+   end
+%    indx = logical( indx );
+   fsig = f( indx );
+   for ch = 1 : C
+       freqs{ ch } = fsig;
+       Amps{ ch } = A( indx, ch );
+       Nf = length( fsig );
 %        fprintf('For channel %d the amplitudes and the Fstatistic at f=%f are \n',ch,f0);
 %        fprintf('Fstatistic = %12.8f Fthreshold = %12.8f\n',Fval(indx),sig);
 %        fprintf('Real part of amplitude = %12.8f\n',real(A(indx,ch)));
 %        fprintf('Imaginary part of amplitude = %12.8f\n',imag(A(indx,ch))); 
-       datafit(:,ch)=exp(i*2*pi*(0:N-1)'*fsig/Fs)*A(indx,ch)+exp(-i*2*pi*(0:N-1)'*fsig/Fs)*conj(A(indx,ch));
+       datafit( :, ch ) = exp( i * 2 * pi * ( 0 : N - 1 )' * fsig / Fs )...
+           * A( indx, ch ) + exp( -i * 2 * pi * ( 0 : N - 1 )' * fsig / Fs )...
+           * conj( A( indx, ch ) );
    end;
 end;
 
