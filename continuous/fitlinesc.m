@@ -107,7 +107,7 @@ else
        [ fsig, indx( n ) ] = min( abs( f - f0( n ) ) );
        
    end
-%    indx = logical( indx );
+   indx = indx( :, 1 );
    fsig = f( indx );
    for ch = 1 : C
        freqs{ ch } = fsig;
