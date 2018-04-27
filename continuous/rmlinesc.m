@@ -90,34 +90,42 @@ if nargout == 0 || strcmp( plt, 'y' )
    figure;
    [ S1, f ] = mtspectrumc( detrend( data ), params );
    
-   subplot(321); 
+   h1Ax( 1 ) = subplot( 321 ); 
    plot( f, 10 * log10( S1 ) );
-   xlabel( 'frequency Hz' ); 
-   ylabel( 'Spectrum dB' );
+   xlabel( 'frequency (Hz)' ); 
+   ylabel( 'Power (dB)' );
    title( 'Original spectrum' );
+   box off
    
-   subplot(323); 
+   h1Ax( 2 ) = subplot( 323 ); 
    plot( f, Fval );
    line( get( gca, 'xlim' ), [ sig sig ], 'Color', 'r' );
-   xlabel( 'frequency Hz' );
+   xlabel( 'frequency (Hz)' );
    ylabel( 'F-statistic' );
    [ S2, f ] = mtspectrumc( detrend( datan ), params );
+   box off
    
-   subplot( 325 );
+   h1Ax( 3 ) = subplot( 325 );
    plot( f, 10 * log10( S1 ), f, 10 * log10( S2 ) );
-   xlabel( 'frequency Hz' );
-   ylabel( 'Spectrum dB' );
+   xlabel( 'frequency (Hz)' );
+   ylabel( 'Power (dB)' );
    title( 'Original and cleaned spectra' );
+   box off
    
-   subplot(322); 
+   h2Ax( 1 ) = subplot( 322 ); 
    plot( ( 1 : size( data, 1 ) ) / params.Fs, data );
-   xlabel( 'time s' ); 
-   title('Original data');
+   xlabel( 'time (s)' ); 
+   title(  'Original data' );
+   box off
    
-   subplot( 324 ); 
+   h2Ax( 2 ) = subplot( 324 ); 
    plot( ( 1 : size( datan, 1 ) ) / params.Fs, datan );
-   xlabel( 'time s' ); 
+   xlabel( 'time (s)' ); 
    title( 'Cleaned data' );
+   box off
+   
+   linkaxes( h1Ax, 'x' )
+   linkaxes( h2Ax, 'xy' )
    
 end
 data = datan;   
