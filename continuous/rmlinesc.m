@@ -1,4 +1,4 @@
-function data = rmlinesc( data, params, p, plt, f0 )
+function [ data, lineFit ] = rmlinesc( data, params, p, plt, f0 )
 % removes significant sine waves from data (continuous data).
 %
 % Usage: data=rmlinesc(data,params,p,plt,f0)
@@ -83,8 +83,8 @@ if isempty( f0 ) && user_specified_pval == 1;
     
 end
 
-[ datafit, Amps, freqs, Fval, sig ] = fitlinesc( data, params, p, 'n', f0 );
-datan = data - datafit;
+[ lineFit, Amps, freqs, Fval, sig ] = fitlinesc( data, params, p, 'n', f0 );
+datan = data - lineFit;
 
 if nargout == 0 || strcmp( plt, 'y' ) 
    figure;
