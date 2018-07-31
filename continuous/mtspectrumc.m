@@ -3,7 +3,7 @@ function [ S, f, Serr, J ] = mtspectrumc( data, params )
 %
 % Usage:
 %
-% [S,f,Serr]=mtspectrumc(data,params)
+% [ S, f, Serr, J ] = mtspectrumc( data, params )
 % Input: 
 % Note units have to be consistent. See chronux.m for more information.
 %       data (in form samples x channels/trials) -- required
@@ -42,9 +42,10 @@ function [ S, f, Serr, J ] = mtspectrumc( data, params )
 %           trialave (average over trials/channels when 1, don't average when 0) - optional. Default 0
 % Output:
 %       S       (spectrum in form frequency x channels/trials if trialave=0; 
-%               in the form frequency if trialave=1)
+%               in the form frequency if trialave = 1)
 %       f       (frequencies)
-%       Serr    (error bars) only for err(1)>=1
+%       Serr    (error bars) only for err(1) >= 1
+%       J       (tapered fourier transform) for use with the group test fx.
 
 % check user input
 if nargin < 1; 
