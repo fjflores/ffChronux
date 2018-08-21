@@ -48,24 +48,24 @@ function [ S, f, Serr, J ] = mtspectrumc( data, params )
 %       J       (tapered fourier transform) for use with the group test fx.
 
 % check user input
-if nargin < 1; 
+if nargin < 1
     error( 'Need data' ); 
     
-end;
+end
 
-if nargin < 2; 
+if nargin < 2
     params = [ ]; 
     
-end;
+end
 
 % extract parameters
-[ tapers, pad, Fs, fpass, err, trialave, params ] = getparams( params );
+[ tapers, pad, Fs, fpass, err, trialave ] = getparams( params );
 
 %   Cannot compute error bars with err(1)=0. Change params and run again. 
-if nargout > 2 && err( 1 ) == 0; 
+if nargout > 2 && err( 1 ) == 0
     error( 'When Serr is desired, err(1) has to be non-zero.' );
     
-end;
+end
 
 data = change_row_to_column( data );
 
@@ -79,13 +79,14 @@ J = J( findx, :, : );
 S = squeeze( mean( conj( J ) .* J, 2 ) );
 
 % average trials.
-if trialave; 
+if trialave
+    J = squeeze( mean( J, 2 ) );
     S = squeeze( mean( S, 2 ) );
     
-end;
+end
 
 % compute error if desired.
-if nargout >= 3; 
+if nargout >= 3
    Serr = specerr( S, J, err, trialave );
    
 end
