@@ -134,18 +134,15 @@ if strcmp(plt,'y');
     %
     subplot(311); 
     plot(f,S1,f,S2); legend('Data 1','Data 2');
-    set(gca,'FontName','Times New Roman','Fontsize', 16);
     ylabel('Spectra');
     title('Two group test for spectrum');
     subplot(312);
     plot(f,dz);
-    set(gca,'FontName','Times New Roman','Fontsize', 16);
     ylabel('Test statistic');
     conf=norminv(1-p/2,0,1);
     line(get(gca,'xlim'),[conf conf]);
     line(get(gca,'xlim'),[-conf -conf]);
     subplot(313);
     plot(f,vdz);
-    set(gca,'FontName','Times New Roman','Fontsize', 16);
     xlabel('frequency'); ylabel('Jackknifed variance');
 end;
