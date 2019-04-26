@@ -102,7 +102,7 @@ if errchk==1;
    phistd=reshape(phistd,[nf Ch]);
 elseif errchk==2;
     tcrit=tinv(pp,dof-1);
-    parfor k=1:dim; % dim is the number of 'independent' estimates
+    for k=1:dim; % dim is the number of 'independent' estimates
         indxk=setdiff(1:dim,k);
         J1k=J1(:,indxk,:);
         J2k=J2(:,indxk,:);
@@ -124,7 +124,11 @@ elseif errchk==2;
     atanhC=sqrt(2*dim-2)*atanh(C); % z
     sigma12=sqrt(dim-1)*squeeze(std(atanhCxyk,1,1)); % Jackknife estimate std(z)=sqrt(dim-1)*std of 1-drop estimates
 %     sigma12=sqrt(dim-1)*squeeze(std(atanhCxyjk,1,1));
-    if Ch==1; sigma12=sigma12'; end;
+    if Ch == 1 
+%         sigma12 = sigma12';
+        sigma12 = change_row_to_column( sigma12 );
+    
+    end
     Cu=atanhC+tcrit(ones(nf,1),:).*sigma12;
     Cl=atanhC-tcrit(ones(nf,1),:).*sigma12;
     %Cerr(1,:,:) = tanh(Cl/sqrt(2*dim-2));
