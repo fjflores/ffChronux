@@ -53,27 +53,27 @@ function [ C, phi, S12, S1, S2, f, confC, phistd, Cerr ] = coherencyc( data1, da
 %                bands for phi - only for err(1)>=1 
 %       Cerr  (Jackknife error bars for C - use only for Jackknife - err(1)=2)
 
-if nargin < 2; 
+if nargin < 2
     error('Need data1 and data2'); 
     
-end;
+end
 
-if nargin < 3; 
+if nargin < 3 
     params = [ ];
     
-end;
+end
 
 [ tapers, pad, Fs, fpass, err, trialave ] = getparams( params );
 if nargout > 8 && err( 1 ) ~= 2; 
     error( 'Cerr computed only for Jackknife. Correct inputs and run again' );
     
-end;
+end
 
 %   Errors computed only if err(1) is nonzero. Need to change params and run again.
 if nargout > 6 && err( 1 ) == 0;
     error( 'When errors are desired, err(1) has to be non-zero.' );
     
-end;
+end
 
 data1 = change_row_to_column( data1 );
 data2 = change_row_to_column( data2 );
@@ -90,20 +90,20 @@ S12 = squeeze( mean( conj( J1 ) .* J2, 2 ) );
 S1 = squeeze( mean( conj( J1 ) .* J1, 2 ) );
 S2 = squeeze( mean( conj( J2 ) .* J2, 2 ) );
 
-if trialave; 
+if trialave
     S12 = squeeze( mean( S12, 2 ) );
     S1 = squeeze( mean( S1, 2 ) );
     S2 = squeeze( mean( S2, 2 ) ); 
     
-end;
+end
 
 C12 = S12 ./ sqrt( S1 .* S2 );
 C = abs( C12 ); 
 phi = angle( C12 );
-if nargout >= 9; 
+if nargout >= 9
      [ confC, phistd, Cerr ] = coherr( C, J1, J2, err, trialave );
      
-elseif nargout >= 7;
+elseif nargout >= 7
      [ confC, phistd ] = coherr( C, J1, J2, err, trialave );
      
-end;
+end
