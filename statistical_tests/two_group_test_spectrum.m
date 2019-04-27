@@ -1,4 +1,4 @@
-function [dz,vdz,Adz]=two_group_test_spectrum(J1,J2,p,plt,f)
+function [dz,vdz,Adz,conf]=two_group_test_spectrum(J1,J2,p,plt,f)
 % function [dz,vdz,Adz]=two_group_test_spectrum(J1,J2,p,plt,f)
 % Test the null hypothesis (H0) that data sets J1, J2 in 
 % two conditions c1,c2 have equal population spectrum
@@ -138,6 +138,7 @@ Adz = zeros( size( dz ) );
 x = norminv( [ p / 2 1 - p / 2 ], 0, 1 );
 indx = find( dz >= x( 1 ) & dz <= x( 2 ) ); 
 Adz( indx ) = 1;
+conf = norminv( 1 - p / 2, 0, 1 );
 
 if strcmp( plt, 'y' )
     if isempty( f ) || nargin < 5
@@ -159,7 +160,6 @@ if strcmp( plt, 'y' )
     subplot( 3, 1, 2 );
     plot( f, dz );
     ylabel( 'Test statistic' );
-    conf = norminv( 1 - p / 2, 0, 1 );
     line( get( gca, 'xlim' ), [ conf conf ] );
     line( get( gca, 'xlim' ), [ -conf -conf ] );
     
