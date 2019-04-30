@@ -1,4 +1,4 @@
-function [dz,vdz,Adz]=two_group_test_coherence(J1c1,J2c1,J1c2,J2c2,p,plt,f)
+function [dz,vdz,Adz,x]=two_group_test_coherence(J1c1,J2c1,J1c2,J2c2,p,plt,f)
 % function [dz,vdz,Adz]=two_group_test_coherence(J1c1,J2c1,J1c2,J2c2,p,plt,f)
 % Test the null hypothesis (H0) that data sets J1c1,J2c1,J1c2,J2c2 in 
 % two conditions c1,c2 have equal population coherence
@@ -132,6 +132,7 @@ x=norminv([p/2 1-p/2],0,1);
 indx=find(dz>=x(1) & dz<=x(2)); 
 Adz(indx)=1;
 
+    
 if strcmp(plt,'y');
     if isempty(f) || nargin < 6;
         f=linspace(0,1,length(dz));
@@ -151,22 +152,21 @@ if strcmp(plt,'y');
     % Plot the coherence
     %
     subplot(311); 
-    plot(f,C121,f,C122); legend('Data 1','Data 2');
-    set(gca,'FontName','Times New Roman','Fontsize', 16);
+    plot(f,C121,f,C122); 
+    legend('Data 1','Data 2');
     ylabel('Coherence');
     title('Two group test for coherence');
     subplot(312);
     plot(f,dz);
-    set(gca,'FontName','Times New Roman','Fontsize', 16);
     ylabel('Test statistic');
-    conf=norminv(1-p/2,0,1);
-    line(get(gca,'xlim'),[conf conf]);
-    line(get(gca,'xlim'),[-conf -conf]);
+    line(get(gca,'xlim'),[ x( 1 ) x( 1 ) ]);
+    line(get(gca,'xlim'),[ x( 2 ) x( 2 ) ]);
     subplot(313);
     plot(f,vdz);
-    set(gca,'FontName','Times New Roman','Fontsize', 16);
-    xlabel('frequency'); ylabel('Jackknifed variance');
-end;
+    xlabel('frequency'); 
+    ylabel('Jackknifed variance');
+    
+end
 % Adzar=zeros(size(dzar));
 % indx=find(dzar>=x(1) & dzar<=x(2)); 
 % Adzar(indx)=1;
