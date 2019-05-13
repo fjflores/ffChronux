@@ -31,7 +31,7 @@ if err( 1 ) == 0
     
 end
 
-if nargout == 4  && err(1)==1
+if nargout == 4  && err( 1 ) == 1
     error('Cerr contains Jackknife errors: only computed when err(1) is 2');
     
 end
@@ -88,18 +88,6 @@ else
     end
     
 end
-%
-% variance of the phase
-%
-%
-% Old code is the next few lines - new code is in the if statement below
-% beginning line 87
-%
-% if isempty(find((C-1).^2 < 10^-16));
-%    phierr = sqrt((2./dof(ones(nf,1),:)).*(1./(C.^2) - 1));
-% else
-%    phierr = zeros(nf,Ch);
-% end
 
 % theoretical, asymptotic confidence level
 if dof <= 2
@@ -137,35 +125,25 @@ elseif errchk == 2
         absCxyk = abs( Cxyk );
         atanhCxyk( k, :, : ) = sqrt( 2 * dim - 2 ) * atanh( absCxyk ); % 1-drop estimate of z
         phasefactorxyk( k, :, : ) = Cxyk ./ absCxyk;
-        %         indxk=setdiff(1:dim,k);
-        %         J1jk=J1(:,indxk,:);
-        %         J2jk=J2(:,indxk,:);
-        %         eJ1jk=squeeze(sum(J1jk.*conj(J1jk),2));
-        %         eJ2jk=squeeze(sum(J2jk.*conj(J2jk),2));
-        %         eJ12jk=squeeze(sum(conj(J1jk).*J2jk,2));
-        %         atanhCxyjk(k,:,:)=sqrt(2*dim-2)*atanh(abs(eJ12jk)./sqrt(eJ1jk.*eJ2jk));
-    end;
+
+    end
     atanhC = sqrt( 2 * dim - 2 ) * atanh( C ); % z
     sigma12 = sqrt( dim - 1 ) * squeeze( std( atanhCxyk, 1, 1 ) ); % Jackknife estimate std(z)=sqrt(dim-1)*std of 1-drop estimates
-    %     sigma12=sqrt(dim-1)*squeeze(std(atanhCxyjk,1,1));
+
     if Ch == 1
-        %         sigma12 = sigma12';
         sigma12 = change_row_to_column( sigma12 );
         
     end
     Cu = atanhC + tcrit( ones( nf, 1 ), : ) .* sigma12;
     Cl = atanhC - tcrit( ones( nf, 1 ), : ) .* sigma12;
-    %Cerr(1,:,:) = tanh(Cl/sqrt(2*dim-2));
     Cerr( 1, :, : ) = max( tanh( Cl / sqrt( 2 * dim - 2 ) ), 0 ); % This ensures that the lower confidence band remains positive
     Cerr( 2, :, : ) = tanh( Cu / sqrt( 2 * dim - 2 ) );
-    %phistd=(2*dim-2)*(1-abs(squeeze(mean(phasefactorxyk))));
     phistd = sqrt( ( 2 * dim - 2 ) * ( 1 - abs( squeeze( mean( phasefactorxyk ) ) ) ) );
+    
     if trialave
         phistd = phistd';
         
     end
     
 end
-% ncrit=norminv(pp);
-% phierr=zeros([2 size(phistd)]);
-% phierr(1,:,:)=phi-ncrit*phistd; phierr(2,:,:)=phi+ncrit*phistd;
+
