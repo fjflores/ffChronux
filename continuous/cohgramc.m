@@ -109,7 +109,6 @@ if trialave
     S2 = zeros( nw, Nf );
     phi = zeros( nw, Nf );
     Cerr = zeros( 2, nw, Nf );
-    %    phierr=zeros(2,nw,Nf);
     phistd = zeros( nw, Nf );
     
 else
@@ -119,7 +118,6 @@ else
     S2 = zeros( nw, Nf, Ch );
     phi = zeros( nw, Nf, Ch );
     Cerr = zeros( 2, nw, Nf, Ch );
-    %    phierr=zeros(2,nw,Nf,Ch);
     phistd = zeros( nw, Nf, Ch );
     
 end
@@ -132,16 +130,12 @@ for n = 1 : nw
     if nargout == 10
         [ c, ph, s12, s1, s2, f, confc, phie, cerr ] = coherencyc(...
             datawin1, datawin2, params );
-        %      phierr(1,n,:,:)=squeeze(phie(1,:,:));
-        %      phierr(2,n,:,:)=squeeze(phie(2,:,:));
         phistd( n, :, : ) = phie;
         Cerr( 1, n, :, : ) = squeeze( cerr( 1, :, : ) );
         Cerr( 2, n, :, : ) = squeeze(cerr(2,:,:));
     elseif nargout == 9
         [ c, ph, s12, s1, s2, f, confc, phie ] = coherencyc(...
             datawin1, datawin2, params );
-        %      phierr(1,n,:,:)=squeeze(phie(1,:,:));
-        %      phierr(2,n,:,:)=squeeze(phie(2,:,:));
         phistd( n, :, : ) = phie;
         
     else
@@ -174,7 +168,6 @@ if nargout == 10
     
 end
 
-% if nargout>=9; phierr=squeeze(phierr);end
 if nargout >= 9 
     phistd = squeeze( phistd );
     
