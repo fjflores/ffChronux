@@ -64,13 +64,13 @@ if nargin < 3
 end
 
 [ tapers, pad, Fs, fpass, err, trialave ] = getparams( params );
-if nargout > 8 && err( 1 ) ~= 2; 
+if nargout > 8 && err( 1 ) ~= 2
     error( 'Cerr computed only for Jackknife. Correct inputs and run again' );
     
 end
 
 %   Errors computed only if err(1) is nonzero. Need to change params and run again.
-if nargout > 6 && err( 1 ) == 0;
+if nargout > 6 && err( 1 ) == 0
     error( 'When errors are desired, err(1) has to be non-zero.' );
     
 end
