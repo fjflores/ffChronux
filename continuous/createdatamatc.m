@@ -4,29 +4,48 @@ function data=createdatamatc(data,E,Fs,win)
 % Usage: data=createdatamatc(data,E,Fs,win)
 % Inputs:
 % data   (input time series as a column vector) - required
-% E      (events to use as triggers) - required 
+% E      (events to use as triggers) - required
 % Fs     (sampling frequency of data) - required
-% win    (window around triggers to use data matrix -[winl winr]) - required 
+% win    (window around triggers to use data matrix -[winl winr]) - required
 %          e.g [1 1] uses a window starting 1 * Fs samples before E and
 %              ending 1*Fs samples after E.
-% Note that E, Fs, and win must have consistent units 
+% Note that E, Fs, and win must have consistent units
 %
 % Outputs:
 % data      (event triggered data)
 %
-if nargin < 4; 
-    error( 'Need all arguments' ); 
-    
-end;
-
-NE = length( E );
-nwinl = round( win( 1 ) * Fs );
-nwinr = round( win( 2 ) * Fs );
-nE = floor( E * Fs ) + 1;
-datatmp = [ ];
-for n = 1 : NE;
-    indx = nE( n ) - nwinl : nE( n ) + nwinr - 1;
-    datatmp = [ datatmp data( indx ) ];
+if nargin < 4
+    error( 'Need all arguments' );
     
 end
-data = datatmp;
+
+[ m, n ] = size( data );
+if n == 1
+    disp( 'Dealing with vector...' )
+    NE = length( E );
+    nwinl = round( win( 1 ) * Fs );
+    nwinr = round( win( 2 ) * Fs );
+    nE = floor( E * Fs ) + 1;
+    datatmp = [ ];
+    for i = 1 : NE
+        indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
+        datatmp = [ datatmp data( indx ) ];
+        
+    end
+    data = datatmp;
+    
+else
+    disp( 'Dealing with matrix...' )
+    NE = length( E );
+    nwinl = round( win( 1 ) * Fs );
+    nwinr = round( win( 2 ) * Fs );
+    nE = floor( E * Fs ) + 1;
+    datatmp = [ ];
+    for i = 1 : NE
+        indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
+        datatmp( :, :, i ) = data( indx, : );
+        
+    end
+    data = datatmp;
+    
+end
