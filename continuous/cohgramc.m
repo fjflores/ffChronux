@@ -1,4 +1,5 @@
-function [C,phi,S12,S1,S2,t,f,confC,phistd,Cerr]=cohgramc(data1,data2,movingwin,params)
+function [ C, phi, S12, S1, S2, t, f, confC, phistd, Cerr ] = cohgramc(...
+    data1, data2, movingwin, params )
 % Multi-taper time-frequency coherence,cross-spectrum and individual spectra - continuous processes
 %
 % Usage:
@@ -132,7 +133,8 @@ for n = 1 : nw
             datawin1, datawin2, params );
         phistd( n, :, : ) = phie;
         Cerr( 1, n, :, : ) = squeeze( cerr( 1, :, : ) );
-        Cerr( 2, n, :, : ) = squeeze(cerr(2,:,:));
+        Cerr( 2, n, :, : ) = squeeze( cerr( 2, :, : ) );
+        
     elseif nargout == 9
         [ c, ph, s12, s1, s2, f, confc, phie ] = coherencyc(...
             datawin1, datawin2, params );
