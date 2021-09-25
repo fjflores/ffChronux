@@ -1,7 +1,7 @@
-function data=createdatamatc(data,E,Fs,win)
+function data = createdatamatc( data, E, Fs, win, t )
 % Helper function to create an event triggered matrix from univariate
 % continuous data
-% Usage: data=createdatamatc(data,E,Fs,win)
+% Usage: data = createdatamatc( data, E, Fs, win)
 % Inputs:
 % data   (input time series as a column vector) - required
 % E      (events to use as triggers) - required
@@ -15,35 +15,61 @@ function data=createdatamatc(data,E,Fs,win)
 % data      (event triggered data)
 %
 if nargin < 4
-    error( 'Need all arguments' );
+    error( 'Need all the first four arguments' );
     
 end
 
-[ m, n ] = size( data );
-if n == 1
-    disp( 'Dealing with vector...' )
-    NE = length( E );
-    nwinl = round( win( 1 ) * Fs );
-    nwinr = round( win( 2 ) * Fs );
-    nE = floor( E * Fs ) + 1;
-    datatmp = [ ];
-    for i = 1 : NE
-        indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
-        datatmp = [ datatmp data( indx ) ];
-        
-    end
-    data = datatmp;
+if nargin == 5
+    tFlag = true;
     
 else
-    disp( 'Dealing with matrix...' )
-    NE = length( E );
-    nwinl = round( win( 1 ) * Fs );
-    nwinr = round( win( 2 ) * Fs );
+    tFlag = false;
+    
+end
+
+% Set up variables needed.
+NE = length( E );
+nwinl = round( win( 1 ) * Fs );
+nwinr = round( win( 2 ) * Fs );
+datatmp = [ ];
+    
+if tFlag == false
+    [ m, n ] = size( data );
     nE = floor( E * Fs ) + 1;
-    datatmp = [ ];
+    
+    if n == 1
+        %     disp( 'Dealing with vector...' )
+        
+        for i = 1 : NE
+            indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
+            datatmp = [ datatmp data( indx ) ];
+            
+        end
+        data = datatmp;
+        
+    else
+        %     disp( 'Dealing with matrix...' )
+        %     NE = length( E );
+        %     nwinl = round( win( 1 ) * Fs );
+        %     nwinr = round( win( 2 ) * Fs );
+        %     nE = floor( E * Fs ) + 1;
+        %     datatmp = [ ];
+        for i = 1 : NE
+            indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
+            datatmp( :, :, i ) = data( indx, : );
+            
+        end
+        data = datatmp;
+        
+    end
+    
+else
+    tol = max( diff( t ) ) + eps;
+    
     for i = 1 : NE
-        indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
-        datatmp( :, :, i ) = data( indx, : );
+        lfpIdx = find( t > E( i ) & t < E( i ) + tol );
+        indx = lfpIdx - nwinl : lfpIdx + nwinr - 1;
+        datatmp = [ datatmp data( indx ) ];
         
     end
     data = datatmp;
