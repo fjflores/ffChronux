@@ -1,4 +1,4 @@
-function data = createdatamatc( data, E, Fs, win, t )
+function [ data, tEpochs ] = createdatamatc( data, E, Fs, win, t )
 % Helper function to create an event triggered matrix from univariate
 % continuous data
 % Usage: data = createdatamatc( data, E, Fs, win)
@@ -38,8 +38,6 @@ if tFlag == false
     nE = floor( E * Fs ) + 1;
     
     if n == 1
-        %     disp( 'Dealing with vector...' )
-        
         for i = 1 : NE
             indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
             datatmp = [ datatmp data( indx ) ];
@@ -48,12 +46,6 @@ if tFlag == false
         data = datatmp;
         
     else
-        %     disp( 'Dealing with matrix...' )
-        %     NE = length( E );
-        %     nwinl = round( win( 1 ) * Fs );
-        %     nwinr = round( win( 2 ) * Fs );
-        %     nE = floor( E * Fs ) + 1;
-        %     datatmp = [ ];
         for i = 1 : NE
             indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
             datatmp( :, :, i ) = data( indx, : );
@@ -65,13 +57,16 @@ if tFlag == false
     
 else
     tol = max( diff( t ) ) + eps;
+    tTmp = [];
     
     for i = 1 : NE
         lfpIdx = find( t > E( i ) & t < E( i ) + tol );
         indx = lfpIdx - nwinl : lfpIdx + nwinr - 1;
         datatmp = [ datatmp data( indx ) ];
+        tTmp = [ tTmp t( indx ) ];
         
     end
     data = datatmp;
+    tEpochs = tTmp;
     
 end
