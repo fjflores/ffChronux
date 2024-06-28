@@ -40,7 +40,29 @@ if tFlag == false
     if n == 1
         for i = 1 : NE
             indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
-            datatmp = [ datatmp data( indx ) ];
+            lnIndx = length( indx );
+            
+            % Catch if a time window extends beyond the signal start or
+            % end.
+            if indx( 1 ) < 0
+                tmp = data( 1 : indx( end ) );
+                datatmp( 1 : lnIndx, i ) = nan;
+                datatmp( lnIndx - length( tmp ) + 1 : lnIndx, i ) = tmp;
+                warning( [ 'Event %i''s window was truncated because ',...
+                    'it started before data.'], i )
+                
+            elseif length( data ) < indx( end )
+                tmp = data( indx( 1 ) : end );
+                datatmp( :, i ) = nan;
+                tmpLength = length( indx( 1 ) : length( data ) );
+                datatmp( 1 : tmpLength, i ) = tmp;
+                warning( [ 'Event %i''s window was truncated because ',...
+                    'it ended after data.' ], i ) 
+                
+            else
+                datatmp( :, i ) = data( indx );
+            
+            end
             
         end
         data = datatmp;
@@ -48,9 +70,32 @@ if tFlag == false
     else
         for i = 1 : NE
             indx = nE( i ) - nwinl : nE( i ) + nwinr - 1;
-            datatmp( :, :, i ) = data( indx, : );
+            lnIndx = length( indx );
+            
+            % Catch if a time window extends beyond the signal start or
+            % end.
+            if indx( 1 ) < 0
+                tmp = data( 1 : indx( end ), : );
+                datatmp( 1 : lnIndx, 1 : n, i ) = nan;
+                datatmp( lnIndx - length( tmp ) + 1 : lnIndx, 1 : n, i ) = tmp;
+                warning( [ 'Event %i''s window was truncated because ',...
+                    'it started before data.'], i )
+            
+            elseif length( data ) < indx( end )            
+                tmp = data( indx( 1 ) : end, : );
+                datatmp( :, :, i ) = nan;
+                tmpLength = length( indx( 1 ) : length( data ) );
+                datatmp( 1 : tmpLength, :, i ) = tmp;
+                warning( [ 'Event %i''s window was truncated because ',...
+                    'it ended after data.' ], i ) 
+                
+            else
+                datatmp( :, :, i ) = data( indx, : );
+            
+            end
             
         end
+            
         data = datatmp;
         
     end
