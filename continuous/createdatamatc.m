@@ -83,9 +83,9 @@ if tFlag == false
             
             elseif length( data ) < indx( end )            
                 tmp = data( indx( 1 ) : end, : );
-                datatmp( :, :, i ) = nan;
+                datatmp( :, 1 : n, i ) = nan;
                 tmpLength = length( indx( 1 ) : length( data ) );
-                datatmp( 1 : tmpLength, :, i ) = tmp;
+                datatmp( 1 : tmpLength, 1 : n, i ) = tmp;
                 warning( [ 'Event %i''s window was truncated because ',...
                     'it ended after data.' ], i ) 
                 
