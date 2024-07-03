@@ -74,9 +74,8 @@ else
     
 end
 
-[ tapers, pad, Fs, fpass, err, trialave, params, mttype ] = getparams(...
-    params );
-if length( params.tapers ) == 3 & movingwin( 1 ) ~= params.tapers( 2 )
+[ tapers, pad, Fs, fpass, err, trialave, mttype ] = getparams( params );
+if length( tapers ) == 3 & movingwin( 1 ) ~= tapers( 2 )
     error(...
         'Duration of data in params.tapers is inconsistent with movingwin(1), modify params.tapers(2) to proceed')
     
@@ -84,7 +83,7 @@ end
 
 if nargout > 3 && err( 1 ) == 0 
 %   Cannot compute error bars with err(1)=0. change params and run again.
-    error('When Serr is desired, err(1) has to be non-zero.');
+    error( 'When Serr is desired, err(1) has to be non-zero.' );
     
 end
 
@@ -140,20 +139,30 @@ for n = 1 : nw
    else
        if strcmp( mttype, 'native' )
            % [ s, f ] = mtspectrumc( datawin, params );
-           [ s, f ] = pmtm( datawin,...
+           % Ny = Fs / 2;
+           w = linspace( fpass( 1 ) / Fs, fpass( 2 ) / Fs, ( nfft / 2 ) + 1 );
+           [ s, fCyc ] = pmtm(...
+               datawin,...
+               { tapers( 1 ), tapers( 2 ) },...
                'Tapers', 'slepian',...
-               'nw', tapers( 1 ),...
-               'fs', Fs,...
-               'f', fpass,...
-               'method', 'eigen' );
+               Fs,...
+               w * pi );
+           f = ( fCyc / pi ) * Fs;
+           if n == 1
+               disp( 'going native' )
+
+           end
 
        else
            [ s, f ] = mtspectrumc( datawin, params );
+           if n == 1
+               disp( 'staying normal' )
+
+           end
 
        end
      
    end
-   
    S( n, :, : ) = s;
    
 end
