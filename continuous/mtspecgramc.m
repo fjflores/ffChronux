@@ -74,7 +74,8 @@ else
     
 end
 
-[ tapers, pad, Fs, fpass, err, trialave, params ] = getparams( params );
+[ tapers, pad, Fs, fpass, err, trialave, params, mttype ] = getparams(...
+    params );
 if length( params.tapers ) == 3 & movingwin( 1 ) ~= params.tapers( 2 )
     error(...
         'Duration of data in params.tapers is inconsistent with movingwin(1), modify params.tapers(2) to proceed')
@@ -86,8 +87,6 @@ if nargout > 3 && err( 1 ) == 0
     error('When Serr is desired, err(1) has to be non-zero.');
     
 end
-
-
 
 data = change_row_to_column( data );
 [ N, Ch ] = size( data );
@@ -139,7 +138,19 @@ for n = 1 : nw
      Serr( 2, n, :, : )=squeeze( serr( 2, :, : ) );
      
    else
-     [ s, f ] = mtspectrumc( datawin, params );
+       if strcmp( mttype, 'native' )
+           % [ s, f ] = mtspectrumc( datawin, params );
+           [ s, f ] = pmtm( datawin,...
+               'Tapers', 'slepian',...
+               'nw', tapers( 1 ),...
+               'fs', Fs,...
+               'f', fpass,...
+               'method', 'eigen' );
+
+       else
+           [ s, f ] = mtspectrumc( datawin, params );
+
+       end
      
    end
    
