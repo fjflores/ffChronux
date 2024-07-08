@@ -94,7 +94,11 @@ Nstep = round( movingwin( 2 ) * Fs ); % number of samples to step through
 nfft = max( 2 ^ ( nextpow2( Nwin ) + pad ), Nwin );
 f = getfgrid( Fs, nfft, fpass ); 
 Nf = length( f );
-params.tapers = dpsschk( tapers, Nwin, Fs ); % check tapers
+
+if strcmp( params.mttype, 'chronux' )
+    params.tapers = dpsschk( tapers, Nwin, Fs ); % check tapers
+
+end
 
 winstart = 1 : Nstep : N - Nwin + 1;
 nw = length( winstart ); 
@@ -134,31 +138,23 @@ for n = 1 : nw
    if nargout == 4
      [ s, f, serr ] = mtspectrumc( datawin, params );
      Serr( 1, n, :, : ) = squeeze( serr( 1, :, : ) );
-     Serr( 2, n, :, : )=squeeze( serr( 2, :, : ) );
+     Serr( 2, n, :, : ) = squeeze( serr( 2, :, : ) );
      
    else
        if strcmp( mttype, 'native' )
-           % [ s, f ] = mtspectrumc( datawin, params );
-           % Ny = Fs / 2;
-           w = linspace( fpass( 1 ) / Fs, fpass( 2 ) / Fs, ( nfft / 2 ) + 1 );
-           [ s, fCyc ] = pmtm(...
-               datawin,...
-               { tapers( 1 ), tapers( 2 ) },...
-               'Tapers', 'slepian',...
-               Fs,...
-               w * pi );
-           f = ( fCyc / pi ) * Fs;
            if n == 1
                disp( 'going native' )
 
            end
+           [ s, f ] = pmtmspectrumc( datawin, params );
 
        else
-           [ s, f ] = mtspectrumc( datawin, params );
            if n == 1
                disp( 'staying normal' )
 
            end
+           [ s, f ] = mtspectrumc( datawin, params );
+          
 
        end
      

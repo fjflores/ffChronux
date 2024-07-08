@@ -14,7 +14,7 @@ clc
 idx = strcmp( allChanPfc.Labels, 'CSC4' );
 data = allChanPfc.Data( :, idx );
 params = struct(...
-    'tapers', [ 5 3 ],...
+    'tapers', [ 3 5 ],...
     'Fs', allChanPfc.Fs,...
     'fpass', [ 0.5 80 ],...
     'pad', 1,...
@@ -22,12 +22,12 @@ params = struct(...
 win = [ 4 0.4 ];
 
 t1 = tic;
-[ Schr, f, t ] = mtspecgramc( data, win, params );
+[ Schr, t, f ] = mtspecgramc( data, win, params );
 tChr = toc( t1 );
 
 params.mttype = 'native';
 t1 = tic;
-[ Snat, f, t ] = mtspecgramc( data, win, params );
+[ Snat, t, f ] = mtspecgramc( data, win, params );
 tNat = toc( t1 );
 
 fprintf( 'Chronux took %s s\n', humantime( tChr ) )
