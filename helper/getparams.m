@@ -1,4 +1,4 @@
-function [ tapers, pad, Fs, fpass, err, trialave, mttype ] = getparams( params )
+function [ tapers, pad, Fs, fpass, err, trialave ] = getparams( params )
 % Helper function to convert structure params to variables used by the
 % various routines - also performs checks to ensure that parameters are
 % defined; returns default values if they are not defined.
@@ -86,15 +86,9 @@ if ~isfield( params, 'trialave' ) || isempty( params.trialave )
 
 end
 
-if ~isfield( params, 'mttype' ) || isempty( params.trialave )
-    params.mttype = 'chronux';
-
-end
-
 tapers = params.tapers;
 pad = params.pad;
 Fs = params.Fs;
 fpass = params.fpass;
 err = params.err;
 trialave = params.trialave;
-mttype = params.mttype;

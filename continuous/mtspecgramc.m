@@ -74,7 +74,7 @@ else
     
 end
 
-[ tapers, pad, Fs, fpass, err, trialave, mttype ] = getparams( params );
+[ tapers, pad, Fs, fpass, err, trialave ] = getparams( params );
 if length( tapers ) == 3 & movingwin( 1 ) ~= tapers( 2 )
     error(...
         'Duration of data in params.tapers is inconsistent with movingwin(1), modify params.tapers(2) to proceed')
@@ -95,10 +95,10 @@ nfft = max( 2 ^ ( nextpow2( Nwin ) + pad ), Nwin );
 f = getfgrid( Fs, nfft, fpass ); 
 Nf = length( f );
 
-if strcmp( params.mttype, 'chronux' )
+% if strcmp( params.mttype, 'chronux' )
     params.tapers = dpsschk( tapers, Nwin, Fs ); % check tapers
-
-end
+% 
+% end
 
 winstart = 1 : Nstep : N - Nwin + 1;
 nw = length( winstart ); 
@@ -141,24 +141,11 @@ for n = 1 : nw
      Serr( 2, n, :, : ) = squeeze( serr( 2, :, : ) );
      
    else
-       if strcmp( mttype, 'native' )
-           if n == 1
-               disp( 'going native' )
-
-           end
-           [ s, f ] = pmtmspectrumc( datawin, params );
-
-       else
-           if n == 1
-               disp( 'staying normal' )
-
-           end
-           [ s, f ] = mtspectrumc( datawin, params );
+       [ s, f ] = mtspectrumc( datawin, params );
           
 
-       end
-     
    end
+
    S( n, :, : ) = s;
    
 end
