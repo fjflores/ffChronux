@@ -1,4 +1,4 @@
-function [ tapers, pad, Fs, fpass, err, trialave ] = getparams( params )
+function [ tapers, pad, Fs, fpass, err, trialave, params ] = getparams( params )
 % Helper function to convert structure params to variables used by the
 % various routines - also performs checks to ensure that parameters are
 % defined; returns default values if they are not defined.
