@@ -4,7 +4,7 @@ function [dz,vdz,Adz,conf]=two_group_test_spectrum(J1,J2,p,plt,f)
 % two conditions c1,c2 have equal population spectrum
 %
 % Usage:
-% [dz,vdz,Adz]=two_sample_test_spectrum(J1,J2,p)
+% [ dz, vdz, Adz ] = two_group_test_spectrum( J1, J2, p )
 %
 % Inputs:
 % J1   tapered fourier transform in condition 1
@@ -27,10 +27,10 @@ function [dz,vdz,Adz,conf]=two_group_test_spectrum(J1,J2,p,plt,f)
 % Note: all outputs are functions of frequency
 %
 % References: Arvesen, Jackkknifing U-statistics, Annals of Mathematical
-% Statisitics, vol 40, no. 6, pg 2076-2100 (1969)
+% Statistics, vol 40, no. 6, pg 2076-2100 (1969)
 
 if nargin < 2
-    error('Need four sets of Fourier transforms'); 
+    error('Need two sets of Fourier transforms'); 
 end
 
 if nargin < 4 || isempty(plt)
