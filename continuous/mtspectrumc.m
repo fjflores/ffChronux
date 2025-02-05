@@ -80,7 +80,7 @@ S = squeeze( mean( conj( J ) .* J, 2 ) );
 
 % average trials.
 if trialave
-    J = squeeze( mean( J, 2 ) );
+    J = squeeze( mean( J, 3 ) );
     S = squeeze( mean( S, 2 ) );
     
 end

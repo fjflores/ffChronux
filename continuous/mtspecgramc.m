@@ -143,7 +143,6 @@ for n = 1 : nw
    else
        [ s, f ] = mtspectrumc( datawin, params );
           
-
    end
 
    S( n, :, : ) = s;
