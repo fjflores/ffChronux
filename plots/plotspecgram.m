@@ -12,10 +12,6 @@ function varargout = plotspecgram( S, t, f, plt )
 % power. "loglog" for logarithmic spectral power and logarithmic frequency.
 
 % Serr: lower and upper confidence intervals for X1: lower/upper x t x f.
-%
-
-
-
 
 if nargin < 1
     error( 'Need data' )
