@@ -142,7 +142,7 @@ conf = norminv( 1 - p / 2, 0, 1 );
 
 if strcmp( plt, 'y' )
     if isempty( f ) || nargin < 5
-        f = linspace( 0, 1, length( dz ) );
+        f = linspace( 0, 0.5, length( dz ) );
         
     end
     
@@ -158,10 +158,16 @@ if strcmp( plt, 'y' )
     title( 'Two group test for spectra' );
     
     subplot( 3, 1, 2 );
+    x = [ f( 1 ) f( 1 ) f( end ) f( end )  ];
+    y = [ -conf( 1 ) conf( 1 ) conf( 1 ) -conf( 1 ) ];
+    patch( x, y, [ 0.9 0.9 0.9 ], 'EdgeColor', 'none' )
+    hold on
     plot( f, dz );
     ylabel( 'Test statistic' );
-    line( get( gca, 'xlim' ), [ conf conf ] );
-    line( get( gca, 'xlim' ), [ -conf -conf ] );
+    % line( get( gca, 'xlim' ), [ conf conf ],...
+    %     'Color', [ 0.5 0.5 0.5 ], 'LineStyle', '--', 'LineWidth', 1 );
+    % line( get( gca, 'xlim' ), [ -conf -conf ],...
+    %     'Color', [ 0.5 0.5 0.5 ], 'LineStyle', '--', 'LineWidth', 1 );
     
     subplot( 3, 1, 3 );
     plot( f, vdz );
