@@ -6,10 +6,29 @@ function varargout = plotspecgram( S, t, f, plt )
 %
 % Inputs:
 % S: input vector as a function of time and frequency (t x f)
-% t: t axis grid for plot. Default [1:size(X,1)]
-% f: f axis grid for plot. Default. [1:size(X,2)]
-% plt: 'linear' for linear spectral power. "log" for logarithmic spectral 
+% t (optional): t axis grid for plot. Default 1:size(S,1)
+% f (optional): f axis grid for plot. Default 1:size(S,2)
+% plt: "linear" for linear spectral power. "log" for logarithmic spectral 
 % power. "loglog" for logarithmic spectral power and logarithmic frequency.
+% 
+% Output:
+% hAx (optional): Axes handle.
+% 
+% Example:
+% fs = 100;              % Sampling frequency (Hz)
+% t = 0 : 1/fs : 5;        % Time vector (0 to 10 seconds)
+% f1 = 10;              % Frequency for the first 5 secs (Hz)
+% f2 = 25;              % Frequency for the last 5 seconds (Hz)
+% y = zeros( size( t ) );   % Initialize the signal
+% y( t < 2.5 ) = sin( 2 * pi * f1 * t( t < 2.5 ) ); 
+% y(t >= 2.5 ) = sin( 2 * pi * f2 * t( t >= 2.5 ) );
+% params = struct( 'tapers', [ 3 5 ], 'Fs', fs );
+% win = [ 0.5 0.05 ];
+% [ S, tS, f ] = mtspecgramc( y, win, params );
+% subplot( 2, 1, 1 )
+% plot( t, y )
+% subplot( 2, 1, 2 )
+% plotspecgram( S, tS, f, "log" )
 
 % Serr: lower and upper confidence intervals for X1: lower/upper x t x f.
 
@@ -39,16 +58,14 @@ if nargin < 4 || isempty( plt )
 
 end
 
-% hAx = axes;
+plt = string( plt );
 switch plt
     case "linear"
         imagesc( t, f, S' )
-        barLeg = "power (uV^2)";
         axis xy
 
     case "log"
         imagesc( t, f, 10 * log10( S' ) )
-        barLeg = "power (dB)";
         axis xy
 
     case "loglog"
@@ -72,7 +89,6 @@ switch plt
         pcolor( t, f, 10 * log10( S' ) )
         shading flat
         set( gca, "Yscale", "log" )
-        barLeg = "power (dB)";
 
 end
 
