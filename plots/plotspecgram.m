@@ -39,7 +39,7 @@ if nargin < 4 || isempty( plt )
 
 end
 
-hAx = axes;
+% hAx = axes;
 switch plt
     case "linear"
         imagesc( t, f, S' )
@@ -76,10 +76,10 @@ switch plt
 
 end
 
-ffcbar( gcf, gca, barLeg )
+% ffcbar( gcf, gca, barLeg )
 
 if nargout > 0
-    varargout{ 1 } = hAx;
+    varargout{ 1 } = gca;
 
 end
 hold off
