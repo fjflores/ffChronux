@@ -38,12 +38,12 @@ if nargin < 1
 end
 
 [ NT, NF ] = size( S );
-if nargin < 2
+if nargin < 2 | isempty( t )
     t = 1 : NT;
 
 end
 
-if nargin < 3
+if nargin < 3 | isempty( f )
     f = 1 : NF;
 
 end
@@ -92,32 +92,11 @@ switch plt
 
 end
 
-% ffcbar( gcf, gca, barLeg )
+
 
 if nargout > 0
     varargout{ 1 } = gca;
 
 end
 hold off
-
-% title( 'Spectrogram' )
-
-% else
-%    subplot( 311 )
-%    imagesc( t, f, squeeze( Serr( 1, :, : ) )' )
-%    axis xy
-%    colorbar
-%    title( 'Lower confidence' )
-%
-%    subplot( 312 )
-%    imagesc( t, f, S' )
-%    title( 'X' )
-%    axis xy
-%    colorbar
-%
-%    subplot( 313 )
-%    imagesc( t, f, squeeze( Serr( 2, :, : ) )' )
-%    axis xy
-%    colorbar
-%    title( 'Upper confidence' )
 
