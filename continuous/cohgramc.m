@@ -175,6 +175,6 @@ if nargout >= 9
     
 end
 
-% winmid = winstart + round( Nwin / 2 );
-% t = winmid / Fs;
-t = winstart / Fs;
+winmid = winstart + round( Nwin / 2 );
+t = winmid / Fs;
+% t = winstart / Fs;

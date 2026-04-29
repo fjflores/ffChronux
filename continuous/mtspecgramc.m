@@ -156,7 +156,7 @@ if nargout == 4
 end
 
 if tFlag == false
-    % winmid = winstart + round( Nwin / 2 );
-    t = ( winstart / Fs ) - round( Nwin / 2 );
+    winmid = winstart + round( Nwin / 2 );
+    t = winmid / Fs;
 
 end
