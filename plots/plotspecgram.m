@@ -8,8 +8,8 @@ function varargout = plotspecgram( S, t, f, plt )
 % S: input vector as a function of time and frequency (t x f)
 % t (optional): t axis grid for plot. Default 1:size(S,1)
 % f (optional): f axis grid for plot. Default 1:size(S,2)
-% plt: "linear" for linear spectral power. "log" for logarithmic spectral 
-% power. "loglog" for logarithmic spectral power and logarithmic frequency.
+% plt: "linear" for linear spectral power. "logP" for logarithmic spectral 
+% power. "logPlogY" for logarithmic spectral power and logarithmic frequency.
 % 
 % Output:
 % hAx (optional): Axes handle.
@@ -64,11 +64,11 @@ switch plt
         imagesc( t, f, S' )
         axis xy
 
-    case "log"
+    case "logP"
         imagesc( t, f, 10 * log10( S' ) )
         axis xy
 
-    case "loglog"
+    case "logPlogY"
         varInfo = whos( 'S' );
         byteSize = varInfo.bytes;
 
