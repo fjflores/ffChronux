@@ -48,26 +48,40 @@ function [dS,f]=mtdspectrumc(data,phi,params)
 %                in form phi x frequency if trialave=1)
 %       f        (frequencies)
 
-if nargin < 2; error('Need data and angle'); end;
-if nargin < 3; params=[]; end;
-[tapers,pad,Fs,fpass,err,trialave,params]=getparams(params);
-clear err params
-data=change_row_to_column(data);
-N=size(data,1);
-nfft=max(2^(nextpow2(N)+pad),N);
-[f,findx]=getfgrid(Fs,nfft,fpass); 
-tapers=dpsschk(tapers,N,Fs); % check tapers
-K=size(tapers,2);
-J=mtfftc(data,tapers,nfft,Fs);
-J=J(findx,:,:);
-A=sqrt(1:K-1);
-A=repmat(A,[size(J,1) 1]);
-A=repmat(A,[1 1 size(J,3)]);
-S=squeeze(mean(J(:,1:K-1,:).*A.*conj(J(:,2:K,:)),2));
-if trialave; S=squeeze(mean(S,2));end;
-nphi=length(phi);
-for p=1:nphi;
-    dS(p,:,:)=real(exp(i*phi(p))*S);
-end;
-dS=squeeze(dS);
-dS=change_row_to_column(dS);
+if nargin < 2 
+    error( 'Need data and angle' ); 
+
+end
+
+if nargin < 3
+     params = [ ]; 
+
+end
+
+[ tapers, pad, Fs, fpass, err, trialave, params] = getparams(params);
+% clear err params
+data = change_row_to_column(data);
+N = size( data, 1 );
+nfft = max( 2 ^ ( nextpow2( N ) + pad ), N );
+[ f, findx ] = getfgrid( Fs, nfft, fpass ); 
+tapers = dpsschk( tapers, N, Fs ); % check tapers
+K = size( tapers, 2 );
+J = mtfftc( data, tapers, nfft, Fs );
+J = J( findx, :, : );
+A = sqrt( 1 : K - 1 );
+A = repmat( A, [ size( J, 1 ) 1 ] );
+A = repmat( A, [ 1 1 size( J, 3 ) ] );
+S = squeeze( mean( J( :, 1 : K - 1, : ) .* A .* conj( J( :, 2 : K, : ) ), 2 ) );
+
+if trialave
+    S = squeeze( mean( S , 2 ) ); 
+
+end
+
+nphi = length(phi);
+for p = 1 : nphi
+    dS( p, :, : ) = real( exp( i * phi( p ) ) * S );
+
+end
+dS = squeeze( dS );
+dS = change_row_to_column( dS );
