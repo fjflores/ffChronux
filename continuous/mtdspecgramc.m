@@ -1,4 +1,4 @@
-function [dS,t,f]=mtdspecgramc(data,movingwin,phi,params)
+function [ dS, t, f] = mtdspecgramc( data, movingwin, phi, params )
 % Multi-taper derivative of the time-frequency spectrum - continuous process
 %
 % Usage:
@@ -57,38 +57,55 @@ function [dS,t,f]=mtdspecgramc(data,movingwin,phi,params)
 %       t       (times)
 %       f       (frequencies)
 
-if nargin < 3; error('Need data, window parameters and angle'); end;
-if nargin < 4; params=[]; end;
+if nargin < 3; 
+    error('Need data, window parameters and angle'); 
 
-if length(params.tapers)==3 & movingwin(1)~=params.tapers(2);
-    error('Duration of data in params.tapers is inconsistent with movingwin(1), modify params.tapers(2) to proceed')
 end
 
-[tapers,pad,Fs,fpass,err,trialave,params]=getparams(params);
+if nargin < 4; 
+    params = [ ]; 
+
+end
+
+if length( params.tapers ) == 3 & movingwin( 1 ) ~= params.tapers( 2 )
+    error('Duration of data in params.tapers is inconsistent with movingwin(1), modify params.tapers(2) to proceed')
+
+end
+
+[ tapers, pad, Fs, fpass, err, trialave, params ] = getparams( params );
 clear err
-data=change_row_to_column(data);
-[N,C]=size(data);
-Nwin=round(Fs*movingwin(1)); % number of samples in window
-Nstep=round(movingwin(2)*Fs); % number of samples to step through
-nfft=max(2^(nextpow2(Nwin)+pad),Nwin);
-f=getfgrid(Fs,nfft,fpass); Nf=length(f);
-params.tapers=dpsschk(tapers,Nwin,Fs); % check tapers
-params.tapers=tapers;
-winstart=1:Nstep:N-Nwin+1;
-nw=length(winstart);
-if trialave==0; dS=zeros(length(phi),nw,Nf,C); else dS=zeros(length(phi),nw,Nf); end; 
-for n=1:nw;
-   indx=winstart(n):winstart(n)+Nwin-1;
-   datawin=data(indx,:);
-   [ds,f]=mtdspectrumc(datawin,phi,params);
-   dS(:,n,:,:)=ds;
-end;
-dS=squeeze(dS);
-sz=size(dS);
+data = change_row_to_column( data );
+[ N, C ] = size( data );
+Nwin = round( Fs * movingwin( 1 ) ); % number of samples in window
+Nstep = round( movingwin( 2 ) * Fs ); % number of samples to step through
+nfft = max( 2^( nextpow2( Nwin ) + pad ), Nwin );
+f = getfgrid( Fs, nfft, fpass ); 
+Nf = length( f );
+params.tapers = dpsschk( tapers, Nwin, Fs ); % check tapers
+params.tapers = tapers;
+winstart = 1 : Nstep : N - Nwin + 1;
+nw = length( winstart );
+if trialave == 0 
+    dS = zeros( length( phi ), nw, Nf, C ); 
+
+else 
+    dS = zeros( length( phi ), nw, Nf );
+
+end
+
+for n = 1 : nw
+   indx = winstart( n ) : winstart( n ) + Nwin - 1;
+   datawin = data( indx, : );
+   [ ds, f ] = mtdspectrumc( datawin, phi, params );
+   dS( :, n, :, : )= ds;
+
+end
+dS = squeeze( dS );
+sz = size( dS );
 % if length(sz)==3;
 %    dS=permute(dS,[2 1 3 4]);
 % elseif length(phi)>1
 %    dS=permute(dS,[2 1 3]);
 % end;
-winmid=winstart+round(Nwin/2);
-t=winmid/Fs;
+winmid = winstart + round( Nwin / 2 );
+t = winmid / Fs;
