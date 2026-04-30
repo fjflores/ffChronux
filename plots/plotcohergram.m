@@ -8,7 +8,7 @@ function varargout = plotcohergram( C, t, f, plt )
 % C: input vector as a function of time and frequency (t x f)
 % t (optional): t axis grid for plot. Default 1:size(C,1)
 % f (optional): f axis grid for plot. Default 1:size(C,2)
-% plt: "linear" for linear coherence. "tan" for hyperbolic arctangent 
+% plt: "none" for linear coherence. "tan" for hyperbolic arctangent 
 % coherence, "flog" for logarithmic logarithmic frequency, "logtan" for
 % logarithmic frequency and arctan coherence. Default: "tan".
 % 
@@ -40,12 +40,12 @@ if nargin < 1
 end
 
 [ NT, NF ] = size( C );
-if nargin < 2
+if nargin < 2 | isempty( t )
     t = 1 : NT;
 
 end
 
-if nargin < 3
+if nargin < 3 | isempty( f )
     f = 1 : NF;
 
 end
@@ -56,13 +56,13 @@ if length( f ) ~= NF || length( t ) ~= NT
 end
 
 if nargin < 4 || isempty( plt )
-    plt = "tan";
+    plt = "none";
 
 end
 
 plt = string( plt );
 switch plt
-    case "linear"
+    case "none"
         imagesc( t, f, C' )
         axis xy
 
@@ -70,7 +70,7 @@ switch plt
         imagesc( t, f, atanh( C' ) )
         axis xy
 
-    case { "flog", "logtan" }
+    case { "flog", "tanlog" }
         varInfo = whos( 'C' );
         byteSize = varInfo.bytes;
         
@@ -98,7 +98,7 @@ switch plt
             shading flat
             set( gca, "Yscale", "log" )
 
-        elseif strcmp( plt, "logtan" )
+        elseif strcmp( plt, "tanlog" )
             pcolor( t, f, atanh( C' ) )
             shading flat
             set( gca, "Yscale", "log" )
